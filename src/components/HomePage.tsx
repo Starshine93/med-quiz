@@ -1,12 +1,15 @@
 import { useState } from 'react'
-import type { ManifestEntry, Question, QuizConfig, CountOption, Difficulty, FeedbackMode, ProgressStore } from '../types'
+import type { ManifestEntry, PartMeta, Question, QuizConfig, CountOption, Difficulty, FeedbackMode, ProgressStore } from '../types'
 
 interface Props {
+  /** entries of the currently open part only */
   manifest: ManifestEntry[]
+  part: PartMeta
   questionBank: Record<string, Question[]>
   progress: ProgressStore
   onStartQuiz: (config: QuizConfig) => void
   onReset: (topicId: string) => void
+  onBack: () => void
   onDashboard: () => void
 }
 
@@ -25,14 +28,14 @@ const DIFFICULTY_OPTIONS: { label: string; value: Difficulty | 'all' }[] = [
 ]
 
 function unseenCount(topicId: string, questionBank: Record<string, Question[]>, progress: ProgressStore): number {
-  const questions = topicId === 'all'
-    ? Object.values(questionBank).flat()
-    : questionBank[topicId] ?? []
+  const questions = questionBank[topicId] ?? []
   const seen = new Set(progress[topicId]?.seenIds ?? [])
   return questions.filter(q => !seen.has(q.id)).length
 }
 
-export default function HomePage({ manifest, questionBank, progress, onStartQuiz, onReset, onDashboard }: Props) {
+export default function HomePage({
+  manifest, part, questionBank, progress, onStartQuiz, onReset, onBack, onDashboard,
+}: Props) {
   const [count, setCount] = useState<CountOption>(20)
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all')
   const [feedbackMode, setFeedbackMode] = useState<FeedbackMode>('immediate')
@@ -41,23 +44,29 @@ export default function HomePage({ manifest, questionBank, progress, onStartQuiz
     return { topicId, topicTitle, count, difficulty, feedbackMode, isRepeatMistakes: false }
   }
 
-  // Combined "all" totals
-  const allQuestions = Object.values(questionBank).flat()
-  const allSeen = new Set(progress['all']?.seenIds ?? [])
-  const allUnseen = allQuestions.filter(q => !allSeen.has(q.id)).length
-  const allTotal = allQuestions.length
+  // Part-wide totals (only topics of this part)
+  const partQuestions = manifest.flatMap(e => questionBank[e.id] ?? [])
+  const partSeen = new Set(progress[part.quizId]?.seenIds ?? [])
+  const partUnseen = partQuestions.filter(q => !partSeen.has(q.id)).length
+  const partTotal = partQuestions.length
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-blue-700">Медицинский тест</h1>
-          <p className="text-gray-500 mt-1">Выберите тему и начните тренировку</p>
+      <div className="flex items-center justify-between mb-8 gap-4">
+        <div className="min-w-0">
+          <button
+            onClick={onBack}
+            className="text-sm text-gray-400 hover:text-gray-600 transition-colors mb-1"
+          >
+            ← Все части
+          </button>
+          <h1 className="text-3xl font-bold text-blue-700">{part.title}</h1>
+          <p className="text-gray-500 mt-1">{part.subtitle}</p>
         </div>
         <button
           onClick={onDashboard}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors text-sm font-medium"
+          className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors text-sm font-medium"
         >
           <span>📊</span> Прогресс
         </button>
@@ -193,41 +202,42 @@ export default function HomePage({ manifest, questionBank, progress, onStartQuiz
         })}
       </div>
 
-      {/* Combined quiz */}
+      {/* Part-wide quiz */}
       <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-bold">Общий тест — все темы</h3>
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h3 className="text-lg font-bold">Общий тест — вся {part.title}</h3>
             <p className="text-blue-100 text-sm mt-0.5">
-              {allTotal === 0
+              {partTotal === 0
                 ? 'Вопросы ещё не добавлены'
-                : allUnseen === 0
-                ? `Вы прошли все ${allTotal} вопросов`
-                : `${allUnseen} непройденных из ${allTotal}`}
+                : partUnseen === 0
+                ? `Вы прошли все ${partTotal} вопросов`
+                : `${partUnseen} непройденных из ${partTotal}`}
             </p>
           </div>
-          {allTotal > 0 && (
-            allUnseen === 0 ? (
+          {partTotal > 0 && (
+            partUnseen === 0 ? (
               <button
                 onClick={() => {
-                  onReset('all')
-                  onStartQuiz({ topicId: 'all', topicTitle: 'Все темы', count, difficulty, feedbackMode, isRepeatMistakes: false })
+                  onReset(part.quizId)
+                  onStartQuiz({
+                    topicId: part.quizId,
+                    topicTitle: `Все темы — ${part.title}`,
+                    count, difficulty, feedbackMode, isRepeatMistakes: false,
+                  })
                 }}
-                className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white text-sm font-medium rounded-xl transition-colors"
+                className="shrink-0 px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white text-sm font-medium rounded-xl transition-colors"
               >
                 Начать заново
               </button>
             ) : (
               <button
                 onClick={() => onStartQuiz({
-                  topicId: 'all',
-                  topicTitle: 'Все темы',
-                  count,
-                  difficulty,
-                  feedbackMode,
-                  isRepeatMistakes: false,
+                  topicId: part.quizId,
+                  topicTitle: `Все темы — ${part.title}`,
+                  count, difficulty, feedbackMode, isRepeatMistakes: false,
                 })}
-                className="px-4 py-2 bg-white text-blue-700 text-sm font-semibold rounded-xl hover:bg-blue-50 transition-colors"
+                className="shrink-0 px-4 py-2 bg-white text-blue-700 text-sm font-semibold rounded-xl hover:bg-blue-50 transition-colors"
               >
                 Начать тест
               </button>

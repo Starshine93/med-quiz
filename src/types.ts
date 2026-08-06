@@ -9,11 +9,22 @@ export interface Question {
   tags: string[]
 }
 
+export type PartId = 1 | 2
+
 export interface ManifestEntry {
   id: string
   title: string
   file: string
   questionCount: number
+  part: PartId
+}
+
+export interface PartMeta {
+  id: PartId
+  title: string
+  subtitle: string
+  /** pseudo topic id used for the part-wide quiz and its progress entry */
+  quizId: string
 }
 
 export type FeedbackMode = 'immediate' | 'deferred'

@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
-import type { ManifestEntry, Question, QuizConfig, QuizResult, QuizSession } from './types'
+import type { ManifestEntry, PartId, Question, QuizConfig, QuizResult, QuizSession } from './types'
+import { PART_QUIZ_IDS, entriesOfPart, partMeta } from './parts'
 import { useProgress } from './hooks/useProgress'
+import PartsPage from './components/PartsPage'
 import HomePage from './components/HomePage'
 import QuizPage from './components/QuizPage'
 import EndScreen from './components/EndScreen'
 import Dashboard from './components/Dashboard'
 
-type View = 'home' | 'quiz' | 'results' | 'dashboard'
+type View = 'parts' | 'part' | 'quiz' | 'results' | 'dashboard'
 
 // Vite glob import — loads all topic question files lazily
 const questionModules = import.meta.glob<{ default: Question[] }>('../data/questions/*.json')
@@ -25,7 +27,10 @@ export default function App() {
   const [questionBank, setQuestionBank] = useState<Record<string, Question[]>>({})
   const [loading, setLoading] = useState(true)
 
-  const [view, setView] = useState<View>('home')
+  const [view, setView] = useState<View>('parts')
+  const [activePart, setActivePart] = useState<PartId>(1)
+  // where the dashboard should return to — it opens from both the picker and a part page
+  const [dashboardFrom, setDashboardFrom] = useState<View>('parts')
   const [session, setSession] = useState<QuizSession | null>(null)
   const [result, setResult] = useState<QuizResult | null>(null)
 
@@ -50,13 +55,17 @@ export default function App() {
     load()
   }, [])
 
-  const topicIds = manifest.map(e => e.id)
+  // Part-wide quizzes get their own progress entries alongside the real topics
+  const topicIds = [...manifest.map(e => e.id), ...PART_QUIZ_IDS]
   const { progress, recordQuizEnd, resetProgress, refreshProgress } = useProgress(topicIds)
 
   function startQuiz(config: QuizConfig, mistakeIds?: string[]) {
     // Gather raw question pool
     let pool: Question[]
-    if (config.topicId === 'all') {
+    const partForQuiz = ([1, 2] as PartId[]).find(p => partMeta(p).quizId === config.topicId)
+    if (partForQuiz) {
+      pool = entriesOfPart(manifest, partForQuiz).flatMap(e => questionBank[e.id] ?? [])
+    } else if (config.topicId === 'all') {
       pool = Object.values(questionBank).flat()
     } else {
       pool = questionBank[config.topicId] ?? []
@@ -98,10 +107,28 @@ export default function App() {
     startQuiz({ ...quizResult.config, isRepeatMistakes: true }, mistakeIds)
   }
 
+  /** Back to the topic list of the part the quiz belonged to. */
   function handleHome() {
     refreshProgress()
-    setView('home')
+    setView('part')
     setSession(null)
+  }
+
+  /** Back to the part picker. */
+  function handleParts() {
+    refreshProgress()
+    setView('parts')
+    setSession(null)
+  }
+
+  function openPart(part: PartId) {
+    setActivePart(part)
+    setView('part')
+  }
+
+  function openDashboard(from: View) {
+    setDashboardFrom(from)
+    setView('dashboard')
   }
 
   if (loading) {
@@ -114,14 +141,25 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {view === 'home' && (
-        <HomePage
+      {view === 'parts' && (
+        <PartsPage
           manifest={manifest}
+          questionBank={questionBank}
+          progress={progress}
+          onOpenPart={openPart}
+          onDashboard={() => openDashboard('parts')}
+        />
+      )}
+      {view === 'part' && (
+        <HomePage
+          manifest={entriesOfPart(manifest, activePart)}
+          part={partMeta(activePart)}
           questionBank={questionBank}
           progress={progress}
           onStartQuiz={startQuiz}
           onReset={resetProgress}
-          onDashboard={() => setView('dashboard')}
+          onBack={handleParts}
+          onDashboard={() => openDashboard('part')}
         />
       )}
       {view === 'quiz' && session && (
@@ -145,7 +183,10 @@ export default function App() {
           questionBank={questionBank}
           progress={progress}
           onReset={resetProgress}
-          onHome={handleHome}
+          onHome={() => {
+            refreshProgress()
+            setView(dashboardFrom)
+          }}
         />
       )}
     </div>
