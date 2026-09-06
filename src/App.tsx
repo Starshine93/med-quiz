@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ManifestEntry, PartId, Question, QuizConfig, QuizResult, QuizSession } from './types'
-import { PART_QUIZ_IDS, entriesOfPart, partMeta } from './parts'
+import { PART_QUIZ_IDS, entriesOfPart, partByQuizId, partMeta } from './parts'
 import { useProgress } from './hooks/useProgress'
 import PartsPage from './components/PartsPage'
 import HomePage from './components/HomePage'
@@ -62,9 +62,9 @@ export default function App() {
   function startQuiz(config: QuizConfig, mistakeIds?: string[]) {
     // Gather raw question pool
     let pool: Question[]
-    const partForQuiz = ([1, 2] as PartId[]).find(p => partMeta(p).quizId === config.topicId)
+    const partForQuiz = partByQuizId(config.topicId)
     if (partForQuiz) {
-      pool = entriesOfPart(manifest, partForQuiz).flatMap(e => questionBank[e.id] ?? [])
+      pool = entriesOfPart(manifest, partForQuiz.id).flatMap(e => questionBank[e.id] ?? [])
     } else if (config.topicId === 'all') {
       pool = Object.values(questionBank).flat()
     } else {

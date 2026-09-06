@@ -9,7 +9,7 @@ export interface Question {
   tags: string[]
 }
 
-export type PartId = 1 | 2
+export type PartId = 1 | 2 | 3
 
 export interface ManifestEntry {
   id: string

@@ -13,6 +13,12 @@ export const PARTS: PartMeta[] = [
     subtitle: 'Дыхательная система, воспаление, шок',
     quizId: 'part2',
   },
+  {
+    id: 3,
+    title: 'Часть 3',
+    subtitle: 'ЖКТ, печень, диабет, антимикробные препараты',
+    quizId: 'part3',
+  },
 ]
 
 export function partMeta(id: PartId): PartMeta {
@@ -27,3 +33,8 @@ export function entriesOfPart(manifest: ManifestEntry[], id: PartId): ManifestEn
 
 /** Pseudo topic ids that stand for a whole part rather than a single topic. */
 export const PART_QUIZ_IDS = PARTS.map(p => p.quizId)
+
+/** The part a part-wide quiz id belongs to, or undefined for a real topic id. */
+export function partByQuizId(quizId: string): PartMeta | undefined {
+  return PARTS.find(p => p.quizId === quizId)
+}

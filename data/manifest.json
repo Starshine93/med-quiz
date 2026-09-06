@@ -131,5 +131,75 @@
     "file": "questions/vascular-diseases.json",
     "questionCount": 30,
     "part": 2
+  },
+  {
+    "id": "carbapenems-fluoroquinolones-tetracyclines",
+    "title": "Карбапенемы, фторхинолоны и тетрациклины",
+    "file": "questions/carbapenems-fluoroquinolones-tetracyclines.json",
+    "questionCount": 30,
+    "part": 3
+  },
+  {
+    "id": "aminoglycosides-sulfonamides",
+    "title": "Аминогликозиды, гликопептиды, линкозамиды, сульфаниламиды",
+    "file": "questions/aminoglycosides-sulfonamides.json",
+    "questionCount": 30,
+    "part": 3
+  },
+  {
+    "id": "antifungal-antiviral-antiparasitic",
+    "title": "Противогрибковые, антивирусные и антипаразитарные препараты",
+    "file": "questions/antifungal-antiviral-antiparasitic.json",
+    "questionCount": 44,
+    "part": 3
+  },
+  {
+    "id": "git-anatomy",
+    "title": "Анатомия желудочно-кишечного тракта",
+    "file": "questions/git-anatomy.json",
+    "questionCount": 50,
+    "part": 3
+  },
+  {
+    "id": "intestine-anatomy",
+    "title": "Кишечник: строение и функции",
+    "file": "questions/intestine-anatomy.json",
+    "questionCount": 42,
+    "part": 3
+  },
+  {
+    "id": "gastritis-ulcer",
+    "title": "Заболевания ЖКТ: гастрит и язвенная болезнь",
+    "file": "questions/gastritis-ulcer.json",
+    "questionCount": 46,
+    "part": 3
+  },
+  {
+    "id": "intestinal-diseases",
+    "title": "Заболевания кишечника",
+    "file": "questions/intestinal-diseases.json",
+    "questionCount": 44,
+    "part": 3
+  },
+  {
+    "id": "liver",
+    "title": "Печень: функции, гепатиты, цирроз",
+    "file": "questions/liver.json",
+    "questionCount": 64,
+    "part": 3
+  },
+  {
+    "id": "gallbladder",
+    "title": "Желчный пузырь и желчнокаменная болезнь",
+    "file": "questions/gallbladder.json",
+    "questionCount": 44,
+    "part": 3
+  },
+  {
+    "id": "pancreas-diabetes",
+    "title": "Поджелудочная железа и сахарный диабет",
+    "file": "questions/pancreas-diabetes.json",
+    "questionCount": 64,
+    "part": 3
   }
 ]
