@@ -206,14 +206,14 @@
     "id": "analyzers",
     "title": "Анализаторы: зрение, слух, обоняние, вкус, кожа",
     "file": "questions/analyzers.json",
-    "questionCount": 66,
+    "questionCount": 68,
     "part": 4
   },
   {
     "id": "nervous-system",
     "title": "Нервная система: строение, отделы, заболевания",
     "file": "questions/nervous-system.json",
-    "questionCount": 59,
+    "questionCount": 62,
     "part": 4
   },
   {
@@ -248,7 +248,7 @@
     "id": "musculoskeletal-diseases",
     "title": "Заболевания ОДС: остеопороз, протрузии, грыжи",
     "file": "questions/musculoskeletal-diseases.json",
-    "questionCount": 30,
+    "questionCount": 35,
     "part": 4
   },
   {
@@ -262,7 +262,7 @@
     "id": "urinary-treatment",
     "title": "Лечение заболеваний мочевыделительной системы",
     "file": "questions/urinary-treatment.json",
-    "questionCount": 32,
+    "questionCount": 37,
     "part": 4
   },
   {
