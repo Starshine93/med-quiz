@@ -201,5 +201,75 @@
     "file": "questions/pancreas-diabetes.json",
     "questionCount": 64,
     "part": 3
+  },
+  {
+    "id": "analyzers",
+    "title": "Анализаторы: зрение, слух, обоняние, вкус, кожа",
+    "file": "questions/analyzers.json",
+    "questionCount": 66,
+    "part": 4
+  },
+  {
+    "id": "nervous-system",
+    "title": "Нервная система: строение, отделы, заболевания",
+    "file": "questions/nervous-system.json",
+    "questionCount": 59,
+    "part": 4
+  },
+  {
+    "id": "endocrine-glands",
+    "title": "Железы внутренней секреции",
+    "file": "questions/endocrine-glands.json",
+    "questionCount": 49,
+    "part": 4
+  },
+  {
+    "id": "exocrine-mixed-glands",
+    "title": "Железы внешней и смешанной секреции",
+    "file": "questions/exocrine-mixed-glands.json",
+    "questionCount": 38,
+    "part": 4
+  },
+  {
+    "id": "skeleton",
+    "title": "Опорно-двигательная система: скелет",
+    "file": "questions/skeleton.json",
+    "questionCount": 56,
+    "part": 4
+  },
+  {
+    "id": "spine-deformities",
+    "title": "Заболевания ОДС: сколиоз, лордоз, кифоз",
+    "file": "questions/spine-deformities.json",
+    "questionCount": 34,
+    "part": 4
+  },
+  {
+    "id": "musculoskeletal-diseases",
+    "title": "Заболевания ОДС: остеопороз, протрузии, грыжи",
+    "file": "questions/musculoskeletal-diseases.json",
+    "questionCount": 30,
+    "part": 4
+  },
+  {
+    "id": "urinary-system",
+    "title": "Мочевыделительная система: строение и заболевания",
+    "file": "questions/urinary-system.json",
+    "questionCount": 35,
+    "part": 4
+  },
+  {
+    "id": "urinary-treatment",
+    "title": "Лечение заболеваний мочевыделительной системы",
+    "file": "questions/urinary-treatment.json",
+    "questionCount": 32,
+    "part": 4
+  },
+  {
+    "id": "obstetrics-gynecology",
+    "title": "Акушерство и гинекология",
+    "file": "questions/obstetrics-gynecology.json",
+    "questionCount": 48,
+    "part": 4
   }
 ]

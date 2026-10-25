@@ -19,6 +19,12 @@ export const PARTS: PartMeta[] = [
     subtitle: 'ЖКТ, печень, диабет, антимикробные препараты',
     quizId: 'part3',
   },
+  {
+    id: 4,
+    title: 'Часть 4',
+    subtitle: 'Нервная система, железы, анализаторы, скелет, почки, гинекология',
+    quizId: 'part4',
+  },
 ]
 
 export function partMeta(id: PartId): PartMeta {
